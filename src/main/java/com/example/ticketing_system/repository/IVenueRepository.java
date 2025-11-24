@@ -2,6 +2,7 @@ package com.example.ticketing_system.repository;
 
 import com.example.ticketing_system.dto.ResponseVenueDTO;
 import com.example.ticketing_system.model.Venue;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 

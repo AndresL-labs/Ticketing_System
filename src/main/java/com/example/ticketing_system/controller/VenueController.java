@@ -2,6 +2,7 @@ package com.example.ticketing_system.controller;
 import com.example.ticketing_system.dto.RequestVenueDTO;
 import com.example.ticketing_system.dto.ResponseVenueDTO;
 import com.example.ticketing_system.service.IVenueService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +19,12 @@ public class VenueController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ResponseVenueDTO>> getAllVenue() {
-        return ResponseEntity.ok(venueService.findAll());
+    public ResponseEntity<Page<ResponseVenueDTO>> getAllVenue(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+
+        return ResponseEntity.ok(venueService.findAll(page, size));
     }
 
     @PostMapping
