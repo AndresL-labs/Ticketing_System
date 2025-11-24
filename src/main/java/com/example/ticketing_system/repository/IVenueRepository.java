@@ -6,5 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface IVenueRepository extends JpaRepository<Venue,Long> {
+public interface IVenueRepository {
+    List<ResponseVenueDTO> findAll();
+    ResponseVenueDTO createVenue(Venue newVenue);
+    ResponseVenueDTO updateVenue(Long id,Venue venue);
+    ResponseVenueDTO deleteVenue(Long id);
 }

@@ -7,6 +7,10 @@ import com.example.ticketing_system.model.Venue;
 import com.example.ticketing_system.repository.IVenueRepository;
 import com.example.ticketing_system.service.IVenueService;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +26,10 @@ public class VenueServiceMock implements IVenueService {
     }
 
     @Override
-    public List<ResponseVenueDTO> findAll() {
-        return venueRepository.findAll();
+    public Page<ResponseVenueDTO> findAll(int page, int size) {
+        List<ResponseVenueDTO> venues = venueRepository.findAll();
+        Pageable pageable = PageRequest.of(page, size);
+        return new PageImpl<ResponseVenueDTO>(venues, pageable, venues.size());
     }
 
     @Override
