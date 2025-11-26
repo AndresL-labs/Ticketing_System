@@ -4,8 +4,9 @@ import com.example.ticketing_system.domain.model.Event;
 import com.example.ticketing_system.domain.port.in.ManageEventUseCase;
 import com.example.ticketing_system.domain.port.out.EventRepositoryPort;
 import com.example.ticketing_system.domain.service.EventDateValidation;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 public class EventUseCase implements ManageEventUseCase {
 
@@ -21,8 +22,8 @@ public class EventUseCase implements ManageEventUseCase {
     }
 
     @Override
-    public List<Event> getAllEvents(int page, int size) {
-        return eventRepositoryPort.findAll(page, size);
+    public Page<Event> getAllEvents(String eventName, String location, LocalDateTime start, LocalDateTime end, int page, int size) {
+        return eventRepositoryPort.findAll(eventName, location, start, end, page, size);
     }
 
     @Override

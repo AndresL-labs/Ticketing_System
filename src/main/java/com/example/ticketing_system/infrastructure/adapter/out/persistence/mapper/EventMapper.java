@@ -5,8 +5,6 @@ import com.example.ticketing_system.infrastructure.adapter.out.persistence.entit
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import java.util.List;
-
 @Mapper
 public interface EventMapper {
 
@@ -14,4 +12,5 @@ public interface EventMapper {
 
     Event toDomain(EventEntity eventEntity);
     EventEntity toEntity(Event event);
+
 }
