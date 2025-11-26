@@ -1,4 +1,4 @@
-package com.example.ticketing_system.application.spec;
+package com.example.ticketing_system.infrastructure.spec;
 
 import com.example.ticketing_system.domain.model.Event;
 import jakarta.persistence.criteria.JoinType;

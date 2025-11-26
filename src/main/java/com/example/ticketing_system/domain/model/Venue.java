@@ -6,6 +6,8 @@ public class Venue {
     private String location;
     private int capacity;
 
+    public Venue() {}
+
     public Venue(Long id, String venueName, String location, int capacity) {
         this.id = id;
         this.venueName = venueName;
