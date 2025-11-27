@@ -1,9 +1,7 @@
 package com.example.ticketing_system.infrastructure.config;
 
-import com.example.ticketing_system.application.usecase.EventUseCase;
-import com.example.ticketing_system.application.usecase.VenueUseCase;
-import com.example.ticketing_system.domain.port.in.ManageEventUseCase;
-import com.example.ticketing_system.domain.port.in.ManageVenueUseCase;
+import com.example.ticketing_system.application.usecase.*;
+import com.example.ticketing_system.domain.port.in.*;
 import com.example.ticketing_system.domain.port.out.EventRepositoryPort;
 import com.example.ticketing_system.domain.port.out.VenueRepositoryPort;
 import org.springframework.context.annotation.Bean;
@@ -13,12 +11,53 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BeansConfig {
     @Bean
-    ManageVenueUseCase manageVenueUseCase(VenueRepositoryPort venueRepository) {
-        return new VenueUseCase(venueRepository);
+    IEventCreateUseCase eventCreateUseCase(EventRepositoryPort eventRepository) {
+        return new EventCreateUseCase(eventRepository);
     }
 
     @Bean
-    ManageEventUseCase manageEventUseCase(EventRepositoryPort eventRepository) {
-        return new EventUseCase(eventRepository);
+    IEventDeleteUseCase eventDeleteUseCase(EventRepositoryPort eventRepository) {
+        return new EventDeleteUseCase(eventRepository);
     }
+
+    @Bean
+    IEventGetAllUseCase eventGetAllUseCase(EventRepositoryPort eventRepository) {
+        return new EventGetAllUseCase(eventRepository);
+    }
+
+    @Bean
+    IEventGetByIdUseCase eventGetByIdUseCase(EventRepositoryPort eventRepository) {
+        return new EventGetByIdUseCase(eventRepository);
+    }
+
+    @Bean
+    IEventUpdateUseCase eventUpdateUseCase(EventRepositoryPort eventRepository) {
+        return new EventUpdateUseCase(eventRepository);
+    }
+
+    @Bean
+    IVenueCreateUseCase venueCreateUseCase(VenueRepositoryPort venueRepository) {
+        return new VenueCreateUseCase(venueRepository);
+    }
+
+    @Bean
+    IVenueDeleteUseCase venueDeleteUseCase(VenueRepositoryPort venueRepository) {
+        return new VenueDeleteUseCase(venueRepository);
+    }
+
+    @Bean
+    IVenueGetAllUseCase venueGetAllUseCase(VenueRepositoryPort venueRepository) {
+        return new VenueGetAllUseCase(venueRepository);
+    }
+
+    @Bean
+    IVenueGetByIdUseCase venueGetByIdUseCase(VenueRepositoryPort venueRepository) {
+        return new VenueGetByIdUseCase(venueRepository);
+    }
+
+    @Bean
+    IVenueUpdateUseCase venueUpdateUseCase(VenueRepositoryPort venueRepository) {
+        return new VenueUpdateUseCase(venueRepository);
+    }
+
 }

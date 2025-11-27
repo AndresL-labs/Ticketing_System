@@ -1,41 +1,43 @@
 package com.example.ticketing_system.infrastructure.adapter.in.web;
 
 import com.example.ticketing_system.domain.model.Venue;
-import com.example.ticketing_system.domain.port.in.ManageVenueUseCase;
+import com.example.ticketing_system.domain.port.in.*;
 import com.example.ticketing_system.infrastructure.adapter.in.dto.RequestVenueDTO;
 import com.example.ticketing_system.infrastructure.adapter.in.dto.ResponseVenueDTO;
 import com.example.ticketing_system.infrastructure.adapter.in.mapper.VenueWebMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/venues")
+@RequiredArgsConstructor
 public class VenueController {
 
-    private final ManageVenueUseCase manageVenueUseCase;
     private final VenueWebMapper venueWebMapper;
 
-    public VenueController(ManageVenueUseCase manageVenueUseCase, VenueWebMapper venueWebMapper) {
-        this.manageVenueUseCase = manageVenueUseCase;
-        this.venueWebMapper = venueWebMapper;
-    }
+    private final IVenueCreateUseCase create;
+    private final IVenueDeleteUseCase delete;
+    private final IVenueGetAllUseCase getAll;
+    private final IVenueGetByIdUseCase getById;
+    private final IVenueUpdateUseCase update;
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseVenueDTO> getVenueById(@PathVariable Long id) {
-        var venue = manageVenueUseCase.getVenueById(id);
+        var venue = getById.getVenueById(id);
         var responseDTO = venueWebMapper.toResponse(venue);
         return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<ResponseVenueDTO>> getAllVenues(
+    public ResponseEntity<Page<ResponseVenueDTO>> getAllVenues(
+            @RequestParam(required = false) Integer minCapacity,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        List<Venue> venues = manageVenueUseCase.getAllVenues(page, size);
+        Page<Venue> venues = getAll.getAllVenues(minCapacity, page, size);
         return ResponseEntity.ok(
-                venues.stream().map(venueWebMapper::toResponse).toList()
+                venues.map(venueWebMapper::toResponse)
         );
     }
 
@@ -44,7 +46,7 @@ public class VenueController {
             @RequestBody RequestVenueDTO requestVenueDTO
     ){
         Venue venue = venueWebMapper.toDomain(requestVenueDTO);
-        Venue createdVenue = manageVenueUseCase.createVenue(venue);
+        Venue createdVenue = create.createVenue(venue);
         ResponseVenueDTO responseDTO = venueWebMapper.toResponse(createdVenue);
         return ResponseEntity.ok(responseDTO);
     }
@@ -55,14 +57,14 @@ public class VenueController {
             @RequestBody RequestVenueDTO requestVenueDTO
     ){
         Venue venue = venueWebMapper.toDomain(requestVenueDTO);
-        Venue updatedVenue = manageVenueUseCase.updateVenue(id, venue);
+        Venue updatedVenue = update.updateVenue(id, venue);
         ResponseVenueDTO responseDTO = venueWebMapper.toResponse(updatedVenue);
         return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVenue(@PathVariable Long id) {
-        manageVenueUseCase.deleteVenue(id);
+        delete.deleteVenue(id);
         return ResponseEntity.noContent().build();
     }
 

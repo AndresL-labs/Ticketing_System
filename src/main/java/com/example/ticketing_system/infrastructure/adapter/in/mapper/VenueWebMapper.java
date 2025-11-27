@@ -6,8 +6,6 @@ import com.example.ticketing_system.infrastructure.adapter.in.dto.ResponseVenueD
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-
-
 public interface VenueWebMapper {
 
     // VenueWebMapper INSTANCE = Mappers.getMapper(VenueWebMapper.class);

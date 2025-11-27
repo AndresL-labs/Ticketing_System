@@ -5,9 +5,9 @@ import com.example.ticketing_system.domain.port.out.VenueRepositoryPort;
 import com.example.ticketing_system.infrastructure.adapter.out.persistence.entity.VenueEntity;
 import com.example.ticketing_system.infrastructure.adapter.out.persistence.mapper.VenueMapper;
 import com.example.ticketing_system.infrastructure.adapter.out.persistence.repository.VenueJpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class VenueRepositoryAdapter implements VenueRepositoryPort {
@@ -28,11 +28,17 @@ public class VenueRepositoryAdapter implements VenueRepositoryPort {
     }
 
     @Override
-    public List<Venue> findAll(int page, int size) {
-        return venueJpaRepository.findAll()
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
+    public Page<Venue> findAll(Integer minCapacity, Pageable pageable) {
+
+        Page<VenueEntity> page;
+
+        if (minCapacity != null){
+            page = venueJpaRepository.findByCapacity(minCapacity, pageable);
+        } else {
+            page = venueJpaRepository.findAll(pageable);
+        }
+
+        return page.map(mapper::toDomain);
     }
 
     @Override
