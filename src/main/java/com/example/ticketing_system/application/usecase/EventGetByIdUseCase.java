@@ -3,7 +3,9 @@ package com.example.ticketing_system.application.usecase;
 import com.example.ticketing_system.domain.model.Event;
 import com.example.ticketing_system.domain.port.in.IEventGetByIdUseCase;
 import com.example.ticketing_system.domain.port.out.EventRepositoryPort;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 public class EventGetByIdUseCase implements IEventGetByIdUseCase {
 
     private final EventRepositoryPort eventRepositoryPort;

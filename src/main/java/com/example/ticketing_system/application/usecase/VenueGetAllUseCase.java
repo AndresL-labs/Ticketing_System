@@ -6,7 +6,9 @@ import com.example.ticketing_system.domain.port.out.VenueRepositoryPort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 public class VenueGetAllUseCase implements IVenueGetAllUseCase {
 
     private final VenueRepositoryPort venueRepositoryPort;

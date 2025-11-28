@@ -4,9 +4,11 @@ import com.example.ticketing_system.domain.model.Event;
 import com.example.ticketing_system.domain.port.in.IEventGetAllUseCase;
 import com.example.ticketing_system.domain.port.out.EventRepositoryPort;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@Transactional(readOnly = true)
 public class EventGetAllUseCase implements IEventGetAllUseCase {
 
     private final EventRepositoryPort eventRepositoryPort;
