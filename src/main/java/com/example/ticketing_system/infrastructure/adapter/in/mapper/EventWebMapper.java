@@ -6,11 +6,9 @@ import com.example.ticketing_system.infrastructure.adapter.in.dto.RequestEventDT
 import com.example.ticketing_system.infrastructure.adapter.in.dto.ResponseEventDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EventWebMapper {
-    EventWebMapper INSTANCE = Mappers.getMapper(EventWebMapper.class);
     @Mapping(source = "venueId", target = "venue")
     Event toDomain(RequestEventDTO dto);
     @Mapping(source = "venue", target = "venueId")

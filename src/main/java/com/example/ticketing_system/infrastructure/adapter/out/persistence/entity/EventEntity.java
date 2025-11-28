@@ -19,7 +19,7 @@ public class EventEntity {
         private String eventName;
         @Column(nullable = false)
         private LocalDateTime eventDate;
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "venue_id", nullable = false)
         private VenueEntity venue;
 }

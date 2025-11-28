@@ -1,10 +1,11 @@
 package com.example.ticketing_system.infrastructure.adapter.in.web;
 
 import com.example.ticketing_system.domain.model.Event;
-import com.example.ticketing_system.domain.port.in.ManageEventUseCase;
+import com.example.ticketing_system.domain.port.in.*;
 import com.example.ticketing_system.infrastructure.adapter.in.dto.RequestEventDTO;
 import com.example.ticketing_system.infrastructure.adapter.in.dto.ResponseEventDTO;
 import com.example.ticketing_system.infrastructure.adapter.in.mapper.EventWebMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +15,21 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/events")
+@RequiredArgsConstructor
 public class EventController {
 
-    private final ManageEventUseCase manageEventUseCase;
+    private final EventWebMapper eventWebMapper;
 
-    public EventController(ManageEventUseCase manageEventUseCase) {
-        this.manageEventUseCase = manageEventUseCase;
-    }
+    private final IEventCreateUseCase create;
+    private final IEventDeleteUseCase delete;
+    private final IEventGetAllUseCase getAll;
+    private final IEventGetByIdUseCase getById;
+    private final IEventUpdateUseCase update;
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseEventDTO> getEventById(@PathVariable Long id) {
-        Event event = manageEventUseCase.getEventById(id);
-        return ResponseEntity.ok(EventWebMapper.INSTANCE.toDTO(event));
+        Event event = getById.getEventById(id);
+        return ResponseEntity.ok(eventWebMapper.toDTO(event));
     }
 
     @GetMapping
@@ -39,8 +43,8 @@ public class EventController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<Event> events = manageEventUseCase.getAllEvents(eventName, location, startDate, endDate, page, size);
-        Page<ResponseEventDTO> response = events.map(EventWebMapper.INSTANCE::toDTO);
+        Page<Event> events = getAll.getAllEvents(eventName, location, startDate, endDate, page, size);
+        Page<ResponseEventDTO> response = events.map(eventWebMapper::toDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -48,21 +52,21 @@ public class EventController {
     public ResponseEntity<ResponseEventDTO> createEvent(
             @RequestBody RequestEventDTO event
     ) {
-        Event newEvent = manageEventUseCase.createEvent(EventWebMapper.INSTANCE.toDomain(event));
-        ResponseEventDTO responseDTO = EventWebMapper.INSTANCE.toDTO(newEvent);
+        Event newEvent = create.createEvent(eventWebMapper.toDomain(event));
+        ResponseEventDTO responseDTO = eventWebMapper.toDTO(newEvent);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseEventDTO> updateEvent(@PathVariable Long id, @RequestBody RequestEventDTO eventDTO) {
-        Event updatedEvent = manageEventUseCase.updateEvent(id, EventWebMapper.INSTANCE.toDomain(eventDTO));
-        ResponseEventDTO responseDTO = EventWebMapper.INSTANCE.toDTO(updatedEvent);
+        Event updatedEvent = update.updateEvent(id, eventWebMapper.toDomain(eventDTO));
+        ResponseEventDTO responseDTO = eventWebMapper.toDTO(updatedEvent);
         return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
-        manageEventUseCase.deleteEvent(id);
+        delete.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
 }
