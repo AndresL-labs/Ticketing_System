@@ -3,6 +3,7 @@ package com.example.ticketing_system.infrastructure.config;
 import com.example.ticketing_system.application.usecase.*;
 import com.example.ticketing_system.domain.port.in.*;
 import com.example.ticketing_system.domain.port.out.EventRepositoryPort;
+import com.example.ticketing_system.domain.port.out.UserRegistrationPort;
 import com.example.ticketing_system.domain.port.out.VenueRepositoryPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,5 +60,11 @@ public class BeansConfig {
     IVenueUpdateUseCase venueUpdateUseCase(VenueRepositoryPort venueRepository) {
         return new VenueUpdateUseCase(venueRepository);
     }
+
+    @Bean
+    public RegisterUserUseCase registerUserUseCase(UserRegistrationPort port) {
+        return new RegisterUserUseCase(port);
+    }
+
 
 }
