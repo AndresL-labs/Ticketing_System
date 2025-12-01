@@ -1,14 +1,18 @@
 package com.example.ticketing_system.infrastructure.adapter.in.web;
 
+import com.example.shared.Create;
+import com.example.shared.Update;
 import com.example.ticketing_system.domain.model.Event;
 import com.example.ticketing_system.domain.port.in.*;
 import com.example.ticketing_system.infrastructure.adapter.in.dto.RequestEventDTO;
 import com.example.ticketing_system.infrastructure.adapter.in.dto.ResponseEventDTO;
 import com.example.ticketing_system.infrastructure.adapter.in.mapper.EventWebMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -16,6 +20,7 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
+@Validated
 public class EventController {
 
     private final EventWebMapper eventWebMapper;
@@ -50,7 +55,7 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<ResponseEventDTO> createEvent(
-            @RequestBody RequestEventDTO event
+            @Validated(Create.class) @RequestBody RequestEventDTO event
     ) {
         Event newEvent = create.createEvent(eventWebMapper.toDomain(event));
         ResponseEventDTO responseDTO = eventWebMapper.toDTO(newEvent);
@@ -58,7 +63,7 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseEventDTO> updateEvent(@PathVariable Long id, @RequestBody RequestEventDTO eventDTO) {
+    public ResponseEntity<ResponseEventDTO> updateEvent(@PathVariable Long id, @Validated(Update.class) @RequestBody RequestEventDTO eventDTO) {
         Event updatedEvent = update.updateEvent(id, eventWebMapper.toDomain(eventDTO));
         ResponseEventDTO responseDTO = eventWebMapper.toDTO(updatedEvent);
         return ResponseEntity.ok(responseDTO);
