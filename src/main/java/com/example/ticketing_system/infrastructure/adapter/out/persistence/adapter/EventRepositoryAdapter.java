@@ -6,6 +6,7 @@ import com.example.ticketing_system.infrastructure.adapter.out.persistence.entit
 import com.example.ticketing_system.infrastructure.adapter.out.persistence.mapper.EventMapper;
 import com.example.ticketing_system.infrastructure.adapter.out.persistence.repository.EventJpaRepository;
 import com.example.ticketing_system.infrastructure.spec.EventSpecification;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,7 @@ public class EventRepositoryAdapter implements EventRepositoryPort {
     @Override
     public Event findById(Long id) {
         return eventJpaRepository.findById(id).map(EventMapper.INSTANCE::toDomain)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Event with ID " + id + " not found"));
     }
     //Event
     @Override
@@ -65,7 +66,7 @@ public class EventRepositoryAdapter implements EventRepositoryPort {
     @Override
     public Event update(Long id, Event event) {
         com.example.ticketing_system.infrastructure.adapter.out.persistence.entity.EventEntity eventToUpdate = eventJpaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Event with ID " + id + " not found"));
         if (event.getEventName() != null) {
             eventToUpdate.setEventName(event.getEventName());
         }
@@ -81,7 +82,7 @@ public class EventRepositoryAdapter implements EventRepositoryPort {
     @Override
     public void delete(Long id) {
     com.example.ticketing_system.infrastructure.adapter.out.persistence.entity.EventEntity eventToDelete = eventJpaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Event not found"));
+            .orElseThrow(() -> new EntityNotFoundException("Event with ID " + id + " not found"));
     eventJpaRepository.delete(eventToDelete);
     }
 }
