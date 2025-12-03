@@ -14,7 +14,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 
 @RestController
@@ -59,7 +61,15 @@ public class EventController {
     ) {
         Event newEvent = create.createEvent(eventWebMapper.toDomain(event));
         ResponseEventDTO responseDTO = eventWebMapper.toDTO(newEvent);
-        return ResponseEntity.ok(responseDTO);
+
+        // Construir la URI del nuevo recurso creado
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(newEvent.getId())
+                .toUri();
+
+        // Devolver 201 Created con la ubicación y el cuerpo del recurso
+        return ResponseEntity.created(location).body(responseDTO);
     }
 
     @PutMapping("/{id}")

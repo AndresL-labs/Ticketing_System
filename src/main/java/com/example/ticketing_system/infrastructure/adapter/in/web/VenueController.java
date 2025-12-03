@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/venues")
@@ -48,7 +51,15 @@ public class VenueController {
         Venue venue = venueWebMapper.toDomain(requestVenueDTO);
         Venue createdVenue = create.createVenue(venue);
         ResponseVenueDTO responseDTO = venueWebMapper.toResponse(createdVenue);
-        return ResponseEntity.ok(responseDTO);
+
+        // Construir la URI del nuevo recurso creado
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(createdVenue.getId())
+                .toUri();
+
+        // Devolver 201 Created con la ubicación y el cuerpo del recurso
+        return ResponseEntity.created(location).body(responseDTO);
     }
 
     @PutMapping("/{id}")

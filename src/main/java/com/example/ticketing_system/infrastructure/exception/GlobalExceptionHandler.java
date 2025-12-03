@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RestControllerAdvice
@@ -71,6 +72,27 @@ public class GlobalExceptionHandler {
         pd.setTitle("Resource not found");
         pd.setType(URI.create("https://example.com/errors/not-found"));
         pd.setDetail(ex.getMessage());
+        pd.setInstance(URI.create(path));
+
+        pd.setProperty("timestamp", OffsetDateTime.now());
+        pd.setProperty("traceId", traceId);
+
+        return pd;
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ProblemDetail handleNoSuchElement(NoSuchElementException ex, WebRequest request) {
+        String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+        String traceId = MDC.get("traceId");
+
+        log.warn("Element not found (Optional empty) - traceId={} - path={} - msg={}",
+                traceId, path, ex.getMessage());
+
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        pd.setTitle("Resource not found");
+        pd.setType(URI.create("https://example.com/errors/not-found"));
+        String detail = ex.getMessage() != null ? ex.getMessage() : "The requested resource does not exist.";
+        pd.setDetail(detail);
         pd.setInstance(URI.create(path));
 
         pd.setProperty("timestamp", OffsetDateTime.now());
